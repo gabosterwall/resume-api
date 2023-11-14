@@ -2,22 +2,28 @@ const asyncHandler = require('express-async-handler')
 const Resume = require('../models/resumeModel')
 
 
-// @desc    Get resume
+// @desc    Get whole resume
 // @route   Get /api/resume
-// @access  Private
+// @access  Public
 const getResume = asyncHandler(async (req, res) => {
     const resume = await Resume.find()
 
     res.status(200).json(resume)
 })
 
-// @desc    Set resume
+// @desc    Set whole resume
 // @route   Set /api/resume
 // @access  Private
 const setResume =  asyncHandler(async (req, res) => {
     if(!req.body.text){
         res.status(400)
         throw new Error('Please fill the text field.')
+    }
+
+    // Validate role
+    if(req.user.role !== 'admin'){
+        res.status(403)
+        throw new Error('Not authorized, admin permission only.')
     }
 
     const resume = await Resume.create({
@@ -28,7 +34,7 @@ const setResume =  asyncHandler(async (req, res) => {
 })
 
 // @desc    Update resume
-// @route   Pet /api/resume
+// @route   Put /api/resume
 // @access  Private
 const updateResume =  asyncHandler(async (req, res) => {
     const resume = await Resume.findById(req.params.id)
