@@ -12,6 +12,20 @@ const getMessage = asyncHandler(async (req, res) => {
     res.status(200).json(message)
 })
 
+// @desc    Get all messages
+// @route   Get /api/messages
+// @access  Private (Admin Only)
+const getAllMessage = asyncHandler(async (req, res) => {
+    if(req.user.role !== 'admin'){
+        res.status(403)
+        throw new Error('Not authorized, admin permission only.')
+    }
+
+    const message = await Message.find()
+
+    res.status(200).json(message)
+})
+
 // @desc    Set message
 // @route   Set /api/messages
 // @access  Private
@@ -19,6 +33,11 @@ const setMessage =  asyncHandler(async (req, res) => {
     if(!req.body.text){
         res.status(400)
         throw new Error('Please add a text value.')
+    }
+
+    if(req.body.text.length >= 400){
+        res.status(400)
+        throw new Error('Error, message too large.')
     }
 
     const message = await Message.create({
@@ -84,4 +103,4 @@ const deleteMessage =  asyncHandler(async (req, res) => {
 })
 
 
-module.exports =  {getMessage, setMessage, updateMessage, deleteMessage }
+module.exports =  {getMessage, getAllMessage, setMessage, updateMessage, deleteMessage }

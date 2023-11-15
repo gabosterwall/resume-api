@@ -1,14 +1,24 @@
 const express = require('express')
 const router = express.Router()
-const { getMessage, setMessage, updateMessage, deleteMessage } = require('../controllers/messageController')
+const { 
+    getMessage, 
+    setMessage, 
+    getAllMessage 
+} = require('../controllers/messageController')
 const { protect } = require('../middleware/authMiddleware')
 
-router.get('/', protect, getMessage)
 
+// @desc    User route
+// @access  Private
+router.get('/', protect, getMessage)
 router.post('/', protect, setMessage)
 
-router.put('/:id', protect, updateMessage)
+// @desc    Admin route
+// @access  Private
+router.get('/', protect, getAllMessage)
 
-router.delete('/:id', protect, deleteMessage)
+//router.put('/:id', protect, updateMessage)
+
+//router.delete('/:id', protect, deleteMessage)
 
 module.exports = router

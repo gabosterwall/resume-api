@@ -1,6 +1,6 @@
 const mongoose = require('mongoose')
 
-
+/*
 const resumeSchema = mongoose.Schema(
     {
         text: {
@@ -12,8 +12,8 @@ const resumeSchema = mongoose.Schema(
         timestamps: true,
     }
 )
+*/
 
-/*
 const resumeSchema = mongoose.Schema(
     {
         contact: {
@@ -107,6 +107,6 @@ const resumeSchema = mongoose.Schema(
         timestamps: true,
     }
 )
-*/
+
 
 module.exports = mongoose.model('Resume', resumeSchema)
