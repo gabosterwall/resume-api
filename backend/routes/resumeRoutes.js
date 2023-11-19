@@ -1,47 +1,52 @@
-const express = require('express')
+//const express = require('express')
+import express from 'express'
 const router = express.Router()
-const { 
+import { 
     getResume, 
     getConctact, 
     getSkills, 
     getEducation, 
     getExperience, 
-    getProjects, 
+    getProjects,
+    getWeaknesses,
     setResume,
-    setConctact,
-    setSkills,
-    setEducation,
-    setExperience,
-    setProjects, 
-    updateResume, 
-    deleteResume,
-    getWeaknesses 
-} = require('../controllers/resumeController')
-const { protect } = require('../middleware/authMiddleware')
+    updateContact,
+    updateSkills,
+    updateEducation,
+    updateExperience,
+    updateProjects,
+    setNewExperience,
+    setNewProject,
+    setNewEducation,
 
-// Whole resume
+} from '../controllers/resumeController.js'
+import { protect } from'../middleware/authMiddleware.js'
+
+// @GET fetch whole resume
 router.get('/', protect, getResume)
 
-// Specific sections
+// @GET fetch specific sections
 router.get('/contact', protect, getConctact)
 router.get('/skills', protect, getSkills)
 router.get('/education', protect, getEducation)
 router.get('/experience', protect, getExperience)
 router.get('/projects', protect, getProjects)
-
-// Easter egg, getWeaknesses = status 500
+// Easter egg, weaknesses are 404
 router.get('/weaknesses', protect, getWeaknesses)
 
-// Whole resume
+// @POST set whole resume (Admin Only)
 router.post('/', protect, setResume)
 
-// Specific sections
-router.post('/contact', protect, setConctact)
-router.post('/skills', protect, setSkills)
-router.post('/education', protect, setEducation)
-router.post('/experience', protect, setExperience)
-router.post('/projects', protect, setProjects)
-router.put('/:id', protect, updateResume)
-router.delete('/:id', protect, deleteResume)
+// @POST set new education, experience or project (Admin Only)
+router.post('/education', protect, setNewEducation)
+router.post('/experience', protect, setNewExperience)
+router.post('/projects', protect, setNewProject)
 
-module.exports = router
+// @PATCH update resume, only through specific sections (Admin Only)
+router.patch('/contact', protect, updateContact)
+router.patch('/skills', protect, updateSkills)
+router.patch('/education/:id', protect, updateEducation)
+router.patch('/experience/:id', protect, updateExperience)
+router.patch('/projects/:id', protect, updateProjects)
+
+export default router

@@ -4,7 +4,7 @@ function App() {
 
   return (
     <>
-      <div className='w-full h-[100vh] bg-gray-700 flex flex-col items-center pt-24'>
+      <div className='w-full h-[100vh] bg-gray-200 flex flex-col items-center pt-24'>
         <div className='w-[60%] h-auto bg-gray-400 border-none rounded-sm shadow-md shadow-stone-800 p-2'>
           <p>
             Lorem, ipsum dolor sit amet consectetur adipisicing elit. Similique assumenda fugit atque numquam quod distinctio nisi sint nostrum, dolorem beatae harum autem minus, non libero quisquam minima culpa magni? Voluptas!

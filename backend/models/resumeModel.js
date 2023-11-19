@@ -1,64 +1,47 @@
-const mongoose = require('mongoose')
-
-/*
-const resumeSchema = mongoose.Schema(
-    {
-        text: {
-            type: String,
-            required: [true, 'Please add a text value.']
-        },
-    },
-    {
-        timestamps: true,
-    }
-)
-*/
+import mongoose from 'mongoose'
 
 const resumeSchema = mongoose.Schema(
     {
         contact: {
             name: {
                 type: String,
-                required: [true, 'Please add a name.'],
+                required: true,
             },
             email: {
                 type: String,
-                required: [true, 'Please add an email.'],
+                required: true,
             }, 
-            linkedin: {
-                type: String
+            network: {
+                type: Map,
+                of: String,
+                default: {},
             },
-            github: {
-                type: String
-            }
         },
         skills: {
             languages: {
                 type: [String],
-                default: [],
             },
-            technologiesFrameworks: {
+            technologies: {
                 type: [String],
-                default: [],
             },
         },
         education: [
             {
                 degree: {
                     type: String,
-                    required: [true, 'Please add a degree.'],
+                    required: true,
                 },
                 school: {
                     type: String,
-                    required: [true, 'Please add a school.'],
+                    required: true,
                 },
                 graduationYear: {
-                    type: Number,
-                    required: [true, 'Please add a graduation year.'],
+                    type: String,
+                    required: true
                 },
                 coursework: {
                     type: [String],
-                    required: [true, 'Please add relevant courses.']
+                    required: true
                 }
             },
         ],
@@ -66,21 +49,21 @@ const resumeSchema = mongoose.Schema(
             {
                 position: {
                     type: String,
-                    required: [true, 'Please add a position.'],
+                    required: true
                 },
                 organization: {
                     type: String,
-                    required: [true, 'Please add a organization.'],
+                    required: true
                 },
                 startDate: {
                     type: String,
-                    required: [true, 'Please add a start date.'],
+                    required: true
                 },
                 endDate: {
                     type: String,
                 },
                 responsibilities: {
-                    type: [String],
+                    type: [String]
                 },
             },
         ],
@@ -96,6 +79,7 @@ const resumeSchema = mongoose.Schema(
                 },
                 technologies: {
                     type: [String],
+                    required: true,
                 },
                 url: {
                     type: String,
@@ -108,5 +92,6 @@ const resumeSchema = mongoose.Schema(
     }
 )
 
+const Resume = mongoose.model('Resume', resumeSchema)
 
-module.exports = mongoose.model('Resume', resumeSchema)
+export default Resume
