@@ -2,13 +2,8 @@
 import express from 'express'
 const router = express.Router()
 import { 
-    getResume, 
-    getConctact, 
-    getSkills, 
-    getEducation, 
-    getExperience, 
-    getProjects,
-    getWeaknesses,
+    getResume,
+    getSection,
     setResume,
     updateContact,
     updateSkills,
@@ -17,8 +12,7 @@ import {
     updateProjects,
     setNewExperience,
     setNewProject,
-    setNewEducation,
-
+    setNewEducation
 } from '../controllers/resumeController.js'
 import { protect } from'../middleware/authMiddleware.js'
 
@@ -26,13 +20,7 @@ import { protect } from'../middleware/authMiddleware.js'
 router.get('/', protect, getResume)
 
 // @GET fetch specific sections
-router.get('/contact', protect, getConctact)
-router.get('/skills', protect, getSkills)
-router.get('/education', protect, getEducation)
-router.get('/experience', protect, getExperience)
-router.get('/projects', protect, getProjects)
-// Easter egg, weaknesses are 404
-router.get('/weaknesses', protect, getWeaknesses)
+router.get('/:id', protect, getSection)
 
 // @POST set whole resume (Admin Only)
 router.post('/', protect, setResume)
@@ -48,5 +36,6 @@ router.patch('/skills', protect, updateSkills)
 router.patch('/education/:id', protect, updateEducation)
 router.patch('/experience/:id', protect, updateExperience)
 router.patch('/projects/:id', protect, updateProjects)
+
 
 export default router

@@ -1,61 +1,252 @@
 openapi: 3.1.0
 info:
-  title: Resume API
   version: 1.0.0
+  title: Resume API
+  contact:
+    email: contact@example.com
+    url: http://example.com/contact
+  license:
+    name:
+    url:
+  description: >
+    Developed by Gabriél Österwall
+
+    # Introduction
+    
+    Welcome to the Resume API, designed to showcase my API development skills as well as to provide users with a fun and unconventional way of accessing and interacting with my resume. Users can not only view the complete resume but also share their thoughts by leaving comments. The API is structured around REST principles, delivering JSON-encoded responses, utilizing standard HTTP response codes, and incorporating a secure authentication mechanism.
+    Whether you aim to retrieve the entire resume or specific sections, authentication via a JSON Web Token (JWT) is required. JWTs are issued upon registration or login and remain valid for 30 minutes, ensuring a secure and seamless experience.
+    </br></br>
+    The API encompasses CRUD operations, granting users the ability to manage their accounts, including the option to delete their account or any published comments. All available endpoints are outlined below.
+    
+    # Authentication
+
+    To safeguard specific endpoints, the API employs JSON Web Tokens for authentication. Tokens, lasting for 30 minutes, are provided upon registration or login. To authenticate a request to a protected endpoint, simply include the bearer token in the Authorization header.  
+
+    # How to use
+
+    Experience the API effortlessly through this interactive documentation. Alternatively, interact with the API using standard tools such as Curl or dedicated API clients like Postman or Insomnia.
+servers:
+    - url: "http://localhost:5000/v1"
+      description: "My server"
+
+tags:
+  - name: User
+    description: Available operations about users
+  - name: Resume
+    description: Available operations about the resume
+  - name: Comment
+    description: Available operations about comments
+
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+  components:
+  schemas:
+    User:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+          example: John Doe
+        email:
+          type: string
+          example: johndoe@email.com
+        password:
+          type: string
+          example: ToDoeOrNotToDoe123
+        admin:
+          type: boolean
+          example: false
+      required:
+        - id
+        - name
+        - email
+        - password
+        - admin
+    Resume:
+      type: object
+      properties:
+        contact:
+          type: object
+          properties:
+            name:
+              type: string
+              required: true
+            email:
+              type: string
+              required: true
+            network:
+              type: object
+              additionalProperties:
+                type: string
+          required:
+            - name
+            - email
+        skills:
+          type: object
+          properties:
+            languages:
+              type: array
+              items:
+                type: string
+            technologies:
+              type: array
+              items:
+                type: string
+        education:
+          type: array
+          items:
+            type: object
+            properties:
+              degree:
+                type: string
+                required: true
+              school:
+                type: string
+                required: true
+              graduationYear:
+                type: string
+                required: true
+              coursework:
+                type: array
+                items:
+                  type: string
+                required: true
+          required: true
+        experience:
+          type: array
+          items:
+            type: object
+            properties:
+              position:
+                type: string
+                required: true
+              organization:
+                type: string
+                required: true
+              startDate:
+                type: string
+                required: true
+              endDate:
+                type: string
+              responsibilities:
+                type: array
+                items:
+                  type: string
+          required: true
+        projects:
+          type: array
+          items:
+            type: object
+            properties:
+              title:
+                type: string
+                required: true
+              description:
+                type: string
+                required: true
+              technologies:
+                type: array
+                items:
+                  type: string
+                required: true
+              url:
+                type: string
+          required: true
+    Comment:
+      type: object
+      properties:
+        id:
+          type: string
+        text:
+          type: string
+          example: This is a comment!
+      required:
+        - id
+        - text
+
 paths:
-  /api/resume:
+  /resume:
     get:
-      summary: Get the whole resume
+      tags:
+        - Resume
+      summary: Fetch whole resume
+      description: Requires a valid Bearer token in the Authorization header
       security:
         - BearerAuth: []
       responses:
         '200':
           description: Successful response
-      description: |
-        Requires a valid Bearer token in the Authorization header.
-
-    post:
-      summary: Create a new resume
-      security:
-        - BearerAuth: []
-      requestBody:
-        content:
-          application/json:
-            schema:
-              # Add your request body schema here
-      description: |
-        Requires a valid Bearer token in the Authorization header.
-
-  /api/resume/contact:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Resume'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: User unauthorized, missing token. 
+        
+  /resume/{section}:
     get:
-      summary: Get contact information
+      tags:
+        - Resume
+      summary: Fetch certain section
+      description: Requires a valid Bearer token in the Authorization header.
       security:
         - BearerAuth: []
+      parameters:
+        - name: section
+          in: path
+          description: The name of the section you want to retrieve.
+          required: true
+          schema:
+            type: string
       responses:
         '200':
-          description: Successful response
-      description: |
-        Requires a valid Bearer token in the Authorization header.
-
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Resume'
+                example: A section object. 
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Inputed section not found. 
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Token is missing in the Authorization header.
+  /users:
     post:
-      summary: Create or update contact information
-      security:
-        - BearerAuth: []
-      requestBody:
-        content:
-          application/json:
-            schema:
-              # Add your request body schema here
-      description: |
-        Requires a valid Bearer token in the Authorization header.
-
-  # Repeat the above pattern for other resume sections (skills, education, experience, projects, weaknesses)
-
-  /api/users:
-    post:
+      tags:
+        - User
       summary: Register a new user
       description: Register a new user with the provided name, email, and password.
       requestBody:
+        description: Create user object
         required: true
         content:
           application/json:
@@ -80,16 +271,14 @@ paths:
               schema:
                 type: object
                 properties:
-                  _id:
+                  admin:
                     type: string
-                  name:
+                    example: false or true 
+                  token:
                     type: string
-                  email:
-                    type: string
-                  role:
-                    type: string
+                    example: your token here, use it to access protected routes.
         '400':
-          description: Bad request. Please fill in all fields or user already exists.
+          description: Bad request
           content:
             application/json:
               schema:
@@ -97,11 +286,41 @@ paths:
                 properties:
                   message:
                     type: string
-
-  /api/users/login:
+                    example: Fields missing or email already in use.
+    delete:
+      tags:
+      - User
+      summary: Delete user
+      description: This endpoint allows users to delete their account and information from the database. 
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Successfull request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Successfully deleted user with id:{id}
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Either a token is missing or is invalid.
+  /users/login:
     post:
-      summary: Log in as a user
-      description: Authenticate a user using their email and password.
+      tags:
+        - User
+      summary: Authenticate existing user
+      description: This endpoint allow existing users to generate a new token, using their email and password.
       requestBody:
         required: true
         content:
@@ -117,19 +336,22 @@ paths:
                 - email
                 - password
       responses:
-        '200':
-          description: User successfully logged in.
+        '201':
+          description: User successfully authenticated.
           content:
             application/json:
               schema:
                 type: object
                 properties:
+                  admin:
+                    type: string
+                    example: false or true 
                   token:
                     type: string
-                  role:
-                    type: string
+                    example: your token here, use it to access protected routes.
+                  
         '400':
-          description: Invalid credentials.
+          description: Bad request
           content:
             application/json:
               schema:
@@ -137,34 +359,53 @@ paths:
                 properties:
                   message:
                     type: string
+                    example: Invalid credentials.
 
-  /api/messages:
+  /comments:
     get:
-      summary: Get user messages
+      tags:
+        - Comment
+      summary: Get comments
+      description: Retrieve all the comments that you've published.
       security:
         - BearerAuth: []
       responses:
         '200':
           description: Successful response
-      description: |
-        Requires a valid Bearer token in the Authorization header.
 
     post:
-      summary: Send a new message
+      tags:
+        - Comment
+      summary: Post new comment
+      description: Requires a valid Bearer token in the Authorization header.
       security:
         - BearerAuth: []
       requestBody:
         content:
           application/json:
             schema:
-              # Add your request body schema here
-      description: |
-        Requires a valid Bearer token in the Authorization header.
+              type: object
+              properties:
+                text:
+                  type: string
+                required:
+                  - text
 
-  # Add additional paths for other message-related operations (e.g., getAllMessage, updateMessage, deleteMessage)
-
-components:
-  securitySchemes:
-    BearerAuth:
-      type: http
-      scheme: bearer
+  /comments/{id}:
+    delete:
+      tags:
+          - Comment
+      summary: Delete comment
+      description: Requires a valid Bearer token in the Authorization header, as well as the id of the comment to remove.
+      security:
+        - BearerAuth: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                _id:
+                  type: string
+                required:
+                  - _id

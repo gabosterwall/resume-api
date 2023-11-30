@@ -1,14 +1,32 @@
 import asyncHandler from 'express-async-handler'
 import generateJWT from '../utils/generateJWT.js'
+import validator from 'validator'
 import User from '../models/userModel.js'
 
 // @desc    Register a new user and generate new token
 // @route   POST /api/users
 // @access  Public
 const registerUser = asyncHandler(async (req, res) => {
-    const { name, email, password } = req.body
     
+    if(!req.body.name || !req.body.email || !req.body.password){
+        res.status(400)
+        throw new Error('Please fill in all fields.')
+    }
+
+    // Validate email
+    if(!validator.isEmail(req.body.email)){
+        res.status(400)
+        throw new Error('Invalid email.')
+    }
+    
+    // Validate password strength
+    if(!validator.isStrongPassword(req.body.password, [{ minLength: 8, minLowercase: 1, minUppercase: 1, minNumbers: 1, minSymbols: 1 }])){
+        res.status(400)
+        throw new Error('Password too weak -> min length: 8, min lowercase: 1, min uppercase: 1, min symbols: 1')
+    }
+
     // Check if user exists
+    const email = req.body.email
     const userExists = await User.findOne({email})
 
     if(userExists){
@@ -16,28 +34,20 @@ const registerUser = asyncHandler(async (req, res) => {
         throw new Error('User already exists.')
     }
 
-    if(!name || !email || !password){
-        res.status(400)
-        throw new Error('Please fill in all fields.')
-    }
-
     // Set the role based on the email address
-    const role = email === process.env.ADMIN_SECRET ? 'admin' : 'user';
+    const admin = email === process.env.ADMIN_SECRET ? true : false;
 
     // Create user
     const user = await User.create({
-        name,
-        email,
-        password,
-        role
+        name: req.body.name,
+        email: req.body.email,
+        password: req.body.password,
+        admin
     })
 
     if(user){
         res.status(201).json({
-            _id: user._id,
-            name: user.name,
-            email: user.email,
-            role: user.role,
+            admin: user.admin,
             token: generateJWT(user._id)
         })
     } else{
@@ -49,7 +59,7 @@ const registerUser = asyncHandler(async (req, res) => {
 // @desc    Authenticate a user by generating new token on login
 // @route   POST /api/users/login
 // @access  Public
-const loginUser = asyncHandler(async (req, res) => {
+const authUser = asyncHandler(async (req, res) => {
     const { email, password } = req.body
 
     // Check for user email
@@ -57,10 +67,6 @@ const loginUser = asyncHandler(async (req, res) => {
 
     if(user && (await user.matchPassword(password))){
         res.status(201).json({
-            _id: user._id,
-            name: user.name,
-            email: user.email,
-            role: user.role,
             token: generateJWT(user._id)
         })
     } else{
@@ -70,32 +76,57 @@ const loginUser = asyncHandler(async (req, res) => {
     
 })
 
-/*
-// @desc    Get user data
-// @route   Get /api/users/me
+// @desc    Delete user account
+// @route   DELETE /api/users
 // @access  Private
-const getMe = asyncHandler(async (req, res) => {
-    res.status(200).json(req.user)
+const deleteUser = asyncHandler(async (req, res) => {
+    if(!req.user){
+        res.status(404)
+        throw new Error('User not found')
+    }
+    await User.findByIdAndDelete(req.user._id)
+    res.status(200).json({message: `Successfully deleted user with _id:${req.user._id}`})
 })
 
-// @desc    Update a user
-// @route   Put /api/users
-// @access  Public
-const updateUser =  (req, res) => {
-    res.json({message: 'Update user'})
-}
+// @desc    Update user account
+// @route   DELETE /api/users
+// @access  Private
+const updateUser = asyncHandler(async (req, res) => {
+    if(!req.body){
+        res.status(400)
+        throw new Error('Please fill in at least one field.')
+    }
+    
+    if(req.user){
 
-// @desc    Delete a user
-// @route   POST /api/users
-// @access  Public
-const deleteUser = (req, res) => {
-    res.json({message: 'Delete user'})
-}
-// Generate JWT
-const generateJWT = (id) => {
-    return jwt.sign({id}, process.env.JWT_SECRET, {expiresIn: '30d'})
-}
+        if(req.body.email){
+            const userExists = await User.findOne({email})
+    
+            if(userExists){
+                res.status(400)
+                throw new Error('User already exists.')
+            }
+        }
 
-*/
+        req.user.name = req.body.name || req.user.name
+        req.user.email = req.body.email || req.user.email
 
-export { registerUser, loginUser}
+        if(req.body.password){
+            req.user.password = req.body.password || req.user.password
+        }
+
+        const updatedUser = await req.user.save()
+        res.status(200).json(updatedUser)
+    }
+    else{
+        res.status(404)
+        throw new Error('User not found')
+    }
+})
+
+export {
+    registerUser, 
+    authUser,
+    updateUser,
+    deleteUser
+}

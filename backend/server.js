@@ -7,6 +7,18 @@ const port = process.env.PORT || 5000
 import userRoutes from './routes/userRoutes.js'
 import resumeRoutes from './routes/resumeRoutes.js'
 import commentRoutes from './routes/commentRoutes.js'
+import swaggerUi from 'swagger-ui-express'
+import fs from 'fs'
+import YAML from 'yaml'
+
+const file  = fs.readFileSync('backend/openapi.yaml', 'utf8')
+const swaggerDocument = YAML.parse(file)
+
+const options = {
+    customCss: `
+        .swagger-ui .topbar { display: none }
+    `
+}
 
 connectDB()
 
@@ -15,13 +27,15 @@ const app = express()
 app.use(express.json())
 app.use(express.urlencoded({extended: false}))
 
-app.use('/api/resume', resumeRoutes)
-app.use('/api/users', userRoutes)
-app.use('/api/comments', commentRoutes)
+app.use(`/${process.env.API_V}/resume`, resumeRoutes)
+app.use(`/${process.env.API_V}/users`, userRoutes)
+app.use(`/${process.env.API_V}/comments`, commentRoutes)
 
-app.get('/', (req, res) => res.send('Server is ready.'))
+app.use(`/${process.env.API_V}/api-docs`, swaggerUi.serve, swaggerUi.setup(swaggerDocument, options))
+
+app.get(`/${process.env.API_V}`, (req, res) => res.send('Server is ready.'))
 
 app.use(notFound)
 app.use(errorHandler)
 
-app.listen(port, () => console.log(`Server started on port ${port}`))
+app.listen(port, () => console.log(`Server started on port ${port}, http://localhost:5000/v1/api-docs`))

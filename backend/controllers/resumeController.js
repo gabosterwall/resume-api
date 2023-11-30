@@ -3,13 +3,39 @@ import Resume from '../models/resumeModel.js'
 
 
 // @desc    Get whole resume
-// @route   Get /api/resume
+// @route   GET /resume
 // @access  Private
 const getResume = asyncHandler(async (req, res) => {
     const resume = await Resume.find()
     
     res.status(200).json(resume)
 })
+
+// @desc    Get specific section of resume
+// @route   GET /resume/:id
+// @access  Private
+const getSection = asyncHandler(async (req, res) => {
+    if(!req.params.id){
+        res.status(400)
+        throw new Error('Section not specified.')
+    }
+
+    if(req.params.id.toLocaleLowerCase() === 'weaknesses'){
+        res.status(404)
+        throw new Error('I have no weaknesses...')
+    }
+
+    if(req.params.id.toLocaleLowerCase() !== 'contact' && req.params.id.toLocaleLowerCase() !== 'skills' && req.params.id.toLocaleLowerCase() !== 'education' && req.params.id.toLocaleLowerCase() !== 'experience' && req.params.id.toLocaleLowerCase() !== 'projects'){
+        res.status(404)
+        throw new Error('Section not found.')
+    }
+
+    const section = await Resume.find({}, `${req.params.id.toLocaleLowerCase()}`)
+
+    res.status(200).json(section)
+})
+
+/*
 
 // @desc    Get contact section of the resume
 // @route   GET /api/resume/contact
@@ -64,11 +90,13 @@ const getWeaknesses = asyncHandler(async (req, res) => {
     throw new Error('There are no weaknesses to be found!')
 })
 
+*/
+
 // @desc    Set whole resume
 // @route   POST /api/resume
 // @access  Private (Admin Only)
 const setResume =  asyncHandler(async (req, res) => {
-    if(req.user.role !== 'admin'){
+    if(req.user.admin){
         res.status(403)
         throw new Error('Not authorized, admin permission only.')
     }
@@ -95,7 +123,7 @@ const setResume =  asyncHandler(async (req, res) => {
 // @route   POST /api/resume/education
 // @access  Private (Admin Only)
 const setNewEducation = asyncHandler(async (req, res) => {
-    if(req.user.role !== 'admin'){
+    if(req.user.admin){
         res.status(403)
         throw new Error('Not authorized, admin permission only.')
     }
@@ -136,7 +164,7 @@ const setNewEducation = asyncHandler(async (req, res) => {
 // @route   POST /api/resume/experience
 // @access  Private (Admin Only)
 const setNewExperience = asyncHandler(async (req, res) => {
-    if(req.user.role !== 'admin'){
+    if(req.user.admin){
         res.status(403)
         throw new Error('Not authorized, admin permission only.')
     }
@@ -178,7 +206,7 @@ const setNewExperience = asyncHandler(async (req, res) => {
 // @route   POST /api/resume/projects
 // @access  Private (Admin Only)
 const setNewProject = asyncHandler(async (req, res) => {
-    if(req.user.role !== 'admin'){
+    if(req.user.admin){
         res.status(403)
         throw new Error('Not authorized, admin permission only.')
     }
@@ -219,7 +247,7 @@ const setNewProject = asyncHandler(async (req, res) => {
 // @route   PATCH /api/resume/contact
 // @access  Private (Admin Only)
 const updateContact =  asyncHandler(async (req, res) => {
-    if(req.user.role !== 'admin'){
+    if(req.user.admin){
         res.status(403)
         throw new Error('Not authorized, admin permission only.')
     }
@@ -262,7 +290,7 @@ const updateContact =  asyncHandler(async (req, res) => {
 // @route   PATCH /api/resume/skills
 // @access  Private (Admin Only)
 const updateSkills =  asyncHandler(async (req, res) => {
-    if(req.user.role !== 'admin'){
+    if(req.user.admin){
         res.status(403)
         throw new Error('Not authorized, admin permission only.')
     }
@@ -304,7 +332,7 @@ const updateSkills =  asyncHandler(async (req, res) => {
 // @route   PATCH /api/resume/education/:id
 // @access  Private (Admin Only)
 const updateEducation =  asyncHandler(async (req, res) => {
-    if(req.user.role !== 'admin'){
+    if(req.user.admin){
         res.status(403)
         throw new Error('Not authorized, admin permission only.')
     }
@@ -347,7 +375,7 @@ const updateEducation =  asyncHandler(async (req, res) => {
 // @route   PATCH /api/resume/experience/:id
 // @access  Private (Admin Only)
 const updateExperience =  asyncHandler(async (req, res) => {
-    if(req.user.role !== 'admin'){
+    if(req.user.admin){
         res.status(403)
         throw new Error('Not authorized, admin permission only.')
     }
@@ -391,7 +419,7 @@ const updateExperience =  asyncHandler(async (req, res) => {
 // @route   PATCH /api/resume/projects/:id
 // @access  Private (Admin Only)
 const updateProjects =  asyncHandler(async (req, res) => {
-    if(req.user.role !== 'admin'){
+    if(req.user.admin){
         res.status(403)
         throw new Error('Not authorized, admin permission only.')
     }
@@ -429,6 +457,7 @@ const updateProjects =  asyncHandler(async (req, res) => {
     
 })
 
+/*
 // @desc    Delete resume
 // @route   Delete /api/resume
 // @access  Private
@@ -444,16 +473,11 @@ const deleteResume =  asyncHandler(async (req, res) => {
 
     res.status(200).json({id: req.params.id})
 })
-
+*/
 
 export {
-    getResume, 
-    getConctact, 
-    getSkills, 
-    getEducation, 
-    getExperience, 
-    getProjects, 
-    getWeaknesses, 
+    getResume,
+    getSection,
     setResume,
     setNewEducation,
     setNewExperience,

@@ -5,7 +5,7 @@ import Comment from '../models/commentModel.js'
 // @route   GET /api/messages
 // @access  Private / Admin Only
 const getComments = asyncHandler(async (req, res) => {
-    if(req.user.role === 'admin'){
+    if(req.user.admin){
         const comment = await Comment.find()
         res.status(200).json(comment)
     }
@@ -42,33 +42,6 @@ const setComment =  asyncHandler(async (req, res) => {
     res.status(200).json(comment)
 })
 
-// @desc    Update message
-// @route   PUT /api/messages/:id
-// @access  Private
-const updateComment =  asyncHandler(async (req, res) => {
-    const comment = await Comment.findById(req.params.id)
-
-    if(!comment){
-        res.status(400)
-        throw new Error('Message not found.')
-    }
-
-    if(!req.user){
-        res.status(404)
-        throw new Error('User not found.')
-    }
-
-    // Validate that the logged in user matches the message's user
-    if(comment.user._id.toString() !== req.user.id){
-        res.status(401)
-        throw new Error('User not authorized.')
-    }
-
-    const updatedComment = await Comment.findByIdAndUpdate(req.params.id, req.body, {new: true})
-
-    res.status(200).json(updatedComment)
-})
-
 // @desc    Delete message
 // @route   Delete /api/messages/:id
 // @access  Private
@@ -100,6 +73,5 @@ const deleteComment =  asyncHandler(async (req, res) => {
 export {
     getComments, 
     setComment,
-    updateComment,
     deleteComment
 }
