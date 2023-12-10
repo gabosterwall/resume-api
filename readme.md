@@ -1,25 +1,17 @@
 # Resume API
 
-Welcome to the Resume API! The API is developed with Node and Express with a MongoDB database, and provides a unique way to view my resume. It supports CRUD operations and incorporates user authentication using JSON Web Tokens (JWT).
+The Resume API was developed for learning purposes as well as to provide a unique approach to viewing my resume. Users have to register an account to get a JSON Web Token (JWT), which is required in order to view the resume as a whole or specific sections of it. There is also an option to post comments! The API's stack consist of Node.js, Express.js, MongoDB for database and Swagger UI for frontend/documentation. 
 
-Try it out [here]()!
 
-## Table of Contents
-1. [Getting Started](#getting-started)
-    - [Prerequisites](#prerequisites)
-    - [Dependencies](#dependencies)
-    - [Installation](#installation)
-2. [Usage](#swagger-ui-documentation)
-    - [Swagger-ui-documentation](#swagger-ui-documentation)
-    - [Admin Endpoints](#admin-endpoints)
-3. [Authentication](#authentication)
-    - [Register](#register)
-    - [Login](#login)
-    - [Authorization](#authorization)
-4. [Technologies Used](#technologies-used)
-5. [Dependencies](#dependencies)
+Feel free to test [here]()!
+
+## Credits
+Looking around fo
+
 
 ## 1. Getting Started
+
+
 
 ### Prerequisites
 Before you begin, ensure you have the following installed on your machine:
@@ -38,6 +30,7 @@ Before you begin, ensure you have the following installed on your machine:
 - [swagger-ui-express](https://www.npmjs.com/package/swagger-ui-express) for generating and serving a Swagger UI documentation
 - [yaml](https://www.npmjs.com/package/yaml) for converting the openapi.yaml content (specification) 
 - [nodemon](https://www.npmjs.com/package/nodemon) for development
+
 
 ### Installation
 1. Clone the repository:
