@@ -4,6 +4,7 @@ dotenv.config()
 import { notFound, errorHandler } from './middleware/errorMiddleware.js'
 import connectDB from './config/db.js'
 const port = process.env.PORT || 5000
+const url = process.env.URL
 import userRoutes from './routes/userRoutes.js'
 import resumeRoutes from './routes/resumeRoutes.js'
 import commentRoutes from './routes/commentRoutes.js'
@@ -38,4 +39,4 @@ app.get(`/${process.env.API_V}`, (req, res) => res.send('Server is ready.'))
 app.use(notFound)
 app.use(errorHandler)
 
-app.listen(port, () => console.log(`Server started on port ${port}, http://localhost:5000/v1/api-docs`))
+app.listen(port, () => console.log(`Server started on ${url}`))

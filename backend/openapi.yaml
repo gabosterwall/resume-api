@@ -26,7 +26,7 @@ info:
 
     Experience the API effortlessly through this interactive documentation. Alternatively, interact with the API using standard tools such as Curl or dedicated API clients like Postman or Insomnia.
 servers:
-    - url: "http://localhost:5000/v1"
+    - url: "https://resume-api-y1zl.onrender.com"
       description: "My server"
 
 tags:
