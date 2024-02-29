@@ -92,36 +92,34 @@ const deleteUser = asyncHandler(async (req, res) => {
 // @route   DELETE /api/users
 // @access  Private
 const updateUser = asyncHandler(async (req, res) => {
-    if(!req.body){
+    if(!req.body.email && !req.body.name && !req.body.password){
         res.status(400)
-        throw new Error('Please fill in at least one field.')
+        throw new Error('Please fill in at least one field to update.')
+    }
+
+    if(req.body.admin){
+        res.status(403)
+        throw new Error('Unauthorized action. Admin permission cannot be modified.')
     }
     
-    if(req.user){
+    const email = req.body.email
+    const userExists = await User.findOne({email})
 
-        if(req.body.email){
-            const userExists = await User.findOne({email})
+    if(userExists){
+        res.status(400)
+        throw new Error('User already exists.')
+    }
+
+    req.user.name = req.body.name || req.user.name
+    req.user.email = req.body.email || req.user.email
+
+    if(req.body.password){
+        req.user.password = req.body.password
+    }
+
+    const updatedUser = await req.user.save()
+    res.status(200).json(updatedUser)
     
-            if(userExists){
-                res.status(400)
-                throw new Error('User already exists.')
-            }
-        }
-
-        req.user.name = req.body.name || req.user.name
-        req.user.email = req.body.email || req.user.email
-
-        if(req.body.password){
-            req.user.password = req.body.password || req.user.password
-        }
-
-        const updatedUser = await req.user.save()
-        res.status(200).json(updatedUser)
-    }
-    else{
-        res.status(404)
-        throw new Error('User not found')
-    }
 })
 
 export {

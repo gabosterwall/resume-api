@@ -50,9 +50,7 @@ There are other endpoints defined in the routes files which require admin permis
 
 ### Admin Endpoints
 
-
-
-## 2. Authentication
+[Work in progress]
 
 
 

@@ -31,6 +31,9 @@ router.post('/experience', protect, setNewExperience)
 router.post('/projects', protect, setNewProject)
 
 // @PATCH update resume, only through specific sections (Admin Only)
+
+// router.patch('/:id', protect, updateSection) ---> FIXA KLART
+
 router.patch('/contact', protect, updateContact)
 router.patch('/skills', protect, updateSkills)
 router.patch('/education/:id', protect, updateEducation)
