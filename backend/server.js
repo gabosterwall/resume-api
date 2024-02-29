@@ -28,13 +28,13 @@ const app = express()
 app.use(express.json())
 app.use(express.urlencoded({extended: false}))
 
-app.use(`/${process.env.API_V}/resume`, resumeRoutes)
-app.use(`/${process.env.API_V}/users`, userRoutes)
-app.use(`/${process.env.API_V}/comments`, commentRoutes)
+app.use(`/resume`, resumeRoutes)
+app.use(`/users`, userRoutes)
+app.use(`/comments`, commentRoutes)
 
-app.use(`/${process.env.API_V}/api-docs`, swaggerUi.serve, swaggerUi.setup(swaggerDocument, options))
+app.use(`/api-docs`, swaggerUi.serve, swaggerUi.setup(swaggerDocument, options))
 
-app.get(`/${process.env.API_V}`, (req, res) => res.send('Server is ready.'))
+app.get(`/`, (req, res) => res.send('Server is ready.'))
 
 app.use(notFound)
 app.use(errorHandler)
