@@ -3,7 +3,7 @@
 The Resume API was developed for learning purposes as well as to provide a unique approach to viewing my resume. Users have to register an account to get a JSON Web Token (JWT), which is required in order to view the resume as a whole or specific sections of it. There is also an option to post comments! The API's stack consist of Node.js, Express.js, MongoDB for database and Swagger UI for frontend/documentation. 
 
 
-Feel free to test [here](https://resume-api-y1zl.onrender.com/api-docs/)!
+Feel free to test it [here](https://resume-api-y1zl.onrender.com/api-docs/)!
 
 ## Credits
 Special thanks to [Brad Treversy](https://github.com/bradtraversy) whose insightful video tutorials greatly contributed to the development of this API. His clear explanations and valuable demonstrations were instrumental in guiding me through the process.

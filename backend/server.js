@@ -17,9 +17,14 @@ const swaggerDocument = YAML.parse(file)
 
 const options = {
     customCss: `
-        .swagger-ui .topbar { display: none }
+        .swagger-ui .topbar { display: none; }
+        .swagger-ui .wrapper { max-width: 100%; overflow-x: hidden; }
+        
+        @media (max-width: 768px) {
+            .swagger-ui .wrapper { font-size: 14px; padding: 10px; }
+        }
     `
-}
+};
 
 connectDB()
 
