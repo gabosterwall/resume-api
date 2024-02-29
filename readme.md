@@ -3,7 +3,7 @@
 The Resume API was developed for learning purposes as well as to provide a unique approach to viewing my resume. Users have to register an account to get a JSON Web Token (JWT), which is required in order to view the resume as a whole or specific sections of it. There is also an option to post comments! The API's stack consist of Node.js, Express.js, MongoDB for database and Swagger UI for frontend/documentation. 
 
 
-Feel free to test [here]()!
+Feel free to test [here](https://resume-api-y1zl.onrender.com/api-docs/)!
 
 ## Credits
 Special thanks to [Brad Treversy](https://github.com/bradtraversy) whose insightful video tutorials greatly contributed to the development of this API. His clear explanations and valuable demonstrations were instrumental in guiding me through the process.
@@ -33,7 +33,7 @@ Before you begin, ensure you have the following installed on your machine:
 ### Installation
 1. Clone the repository:
     ```
-    git clone https://github.com/your-username/your-repository.git <your-name-here>
+    git clone https://github.com/gabosterwall/resume-api <your-name-here>
     ```
 2. Install dependencies:
     ```
@@ -43,7 +43,7 @@ Before you begin, ensure you have the following installed on your machine:
 ## 3. Usage
 
 ### Swagger UI Documentation
-The API utilizes swagger-ui-express to generate and serve a Swagger UI for a interactive documentation. More information about the publicaly available endpoints are listed [there]().
+The API utilizes swagger-ui-express to generate and serve a Swagger UI for a interactive documentation. More information about the publicaly available endpoints are listed [there](https://resume-api-y1zl.onrender.com/api-docs/).
 There are other endpoints defined in the routes files which require admin permission. Admin permission is given to an account on registration based on a enviroment variable, for example a specific username or email. 
 
 ### Admin Endpoints
