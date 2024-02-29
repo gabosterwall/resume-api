@@ -6,12 +6,10 @@ The Resume API was developed for learning purposes as well as to provide a uniqu
 Feel free to test [here]()!
 
 ## Credits
-Looking around fo
+Special thanks to [Brad Treversy](https://github.com/bradtraversy) whose insightful video tutorials greatly contributed to the development of this API. His clear explanations and valuable demonstrations were instrumental in guiding me through the process.
 
 
 ## 1. Getting Started
-
-
 
 ### Prerequisites
 Before you begin, ensure you have the following installed on your machine:
@@ -29,7 +27,7 @@ Before you begin, ensure you have the following installed on your machine:
 - [dotenv](https://www.npmjs.com/package/dotenv) for enviroment variables
 - [swagger-ui-express](https://www.npmjs.com/package/swagger-ui-express) for generating and serving a Swagger UI documentation
 - [yaml](https://www.npmjs.com/package/yaml) for converting the openapi.yaml content (specification) 
-- [nodemon](https://www.npmjs.com/package/nodemon) for development
+- [nodemon](https://www.npmjs.com/package/nodemon) for a smoother development process
 
 
 ### Installation
